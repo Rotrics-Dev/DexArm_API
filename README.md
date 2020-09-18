@@ -1,61 +1,71 @@
-# 概述
-DexArm基于全球领先的开源项目Marlin定制开发，固件完全开源，控制指令(Gcode)兼容Marlin。
+Introduction
 
-Gcode指令是数控机床、3D打印机等设置通用控制指令，由ASCII字符串组成，如`G1 F2000 X0 Y300 Z0`，Gcode指令通常以`\n`作为发送结束符。
+DexArm is developed based on the world's leading open source project **Marlin**, the DexArm firmware is completely open source, and its control commands (G-code) are compatible with Marlin.
 
-在Marlin中，下位机收到Gcode指令后，会回复`ok`。上位机收到`ok`后方可发送下一条指令。在DexArm的SDK(pydexarm等)中我们将此收发机制做了封装，方便用户调用。
+G-code commands are the general control commands for CNC machines, 3D printers, etc. It is composed of ASCII strings, such as `G1 F2000 X0 Y300 Z0`, G-code commands usually uses `\n` as the sending end character.
 
-# 通信格式
+In Marlin, the slave device will reply `ok` after receiving the G-code commands, the host computer then can send the next commands after receiving the `ok`. In DexArm SDK (pydexarm, etc.), we have encapsulated this sending and receiving mechanism and make it convenient for users to use.
+
+
+
+Communication Parameters
+
 - Baud rate: 115200
 - Data bits: 8
 - Stop bits: 1
 - Parity: None
 - Flow control: None
 
-# 开机初始化
-上位机连接机械臂后， 首先需要发送 `GoHOME`指令，让机械臂进入HOME(`X0 Y300 Z0`)位置。
+**Initialization**
 
-# 前端模块选择
-DexArm不同的前端模块偏置尺寸不同，需要通过`M888 Pn`设置实际使用的前端模块，设置成功后会保存在固件中，下次启动自动加载保存的前端模块。
-- 笔模块：`M888 P0`
-- 激光模块：`M888 P1`
-- 气泵模块：`M888 P2`
-- 3D打印模块：`M888 P3`
+After the host computer is connected to the robot arm, please send the `GoHOME` command at first to move the arm to the HOME (`X0 Y300 Z0`) position. 
 
-# 重新校准初始位置
-DexArm的HOME位置，运动坐标均由初始位置解算而来。DexArm出厂前已校正初始位置
+**Front-end modules**
 
-如果发现DexArm运动出现错误，需重新校准初始位置。
+Different front-end modules have different offset values. You need to set the actual front-end module through command `M888 Pn`. After that, the parameters will be saved in the firmware, and when you re-start the arm next time, it will load the saved front-end module parameters automatically.
 
-## 校准方法:
-- 将机械臂摆到最大配置(图)
-- 发送`M889`
+- Pen holder module: `M888 P0`
+- Laser engraving module: `M888 P1`
+- Pneumatic module: `M888 P2`
+- 3D printing module: `M888 P3`
 
-# 运动指令
-参考运动控制章节
+**Re-calibrate the initial position**
 
-相关指令`G0_G1` `G2_G3` `M201` `M202` `M203` `M204`(链接)
+The DexArm HOME position and motion coordinates are based on the initial position. The initial position has been calibrated before leaving the factory. If there is any error in the arm movement, please re-calibrate the initial position according to the following instruction:
 
-# 暂停指令
-相关指令`G4`
+1. Adjust the arm to the following position, make sure Axis 1 and Axis 2 is in the maximum position:
 
-# 气泵指令
-- 气泵吸气\柔性爪抓取 `M1000`
-- 气泵吹气\柔性爪张开 `M1001`
-- 气泵放气\柔性爪自然状态（泄气气阀打开） `M1002`
-- 所有气泵气阀停止工作 `M1003`
-- 当气泵长时间不工作时，请发送`M1003`，停止所有气泵气阀
+2. Send command `M889`
 
-# 激光指令
-相关指令`M3` `M5`(链接)
+**Motion commands**
 
-# 3D打印指令
-参考3D打印章节
+Please refer to this section for the details. 
 
-相关指令`M105` `M108` `M106` `M107` `M109`(链接)
+**Stop Commands**
 
-# [DexArm在线使用手册](https://manual.rotrics.com/)
+Related command `G4`
 
-# [DexArm API&SDK](https://manual.rotrics.com/gcode/api-and-sdk)
+## **Pneumatic module control commands**
 
-# [Marlin官方Gcode说明](https://marlinfw.org/meta/gcode/)
+- M1000(0D0A) - air pump box to pump in
+- M1001(0D0A) - air pump box to pump out
+- M1002(0D0A) - air pump box to release air
+  - To return to original status when the suction cup/soft gripper is not working.
+- M1003(0D0A) - stop air pump box
+
+Attention: the commands for the soft gripper and the suction cup is opposite. When air pump box pump in, suction cup will pick the item while the soft gripper will release the item. When air pump box pump out, suction cup will release the item while the soft gripper will grab the item. 
+
+**Laser module control commands**
+
+- M3 - initiate laser, set duty cycle. Parameters:
+  - S - duty cycle, arrange 0-255
+
+Sample 
+
+
+
+```
+;engrave under the maxium powerM3 S255
+```
+
+- M5 - stop laser
