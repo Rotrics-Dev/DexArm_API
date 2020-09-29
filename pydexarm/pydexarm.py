@@ -48,7 +48,7 @@ class Dexarm:
 
     def set_workorigin(self):
         """
-        Set the work origin.
+        Set the current position as the new work origin.
         """
         self._send_cmd("G92 X0 Y0 Z0 E0\r")
 
@@ -69,11 +69,11 @@ class Dexarm:
         Set the type of end effector.
 
         Args:
-            type (str):
-                P0 for Pen holder module
-                P1 Laser engraving module
-                P2 for Pneumatic module
-                P3 for 3D printing module
+            module_type (int):
+                0 for Pen holder module
+                1 for Laser engraving module
+                2 for Pneumatic module
+                3 for 3D printing module
         """
         self._send_cmd("M888 P" + str(module_type) + "\r")
 
@@ -82,7 +82,7 @@ class Dexarm:
         Get the type of end effector.
 
         Returns:
-            type of the module
+            string that indicates the type of the module
         """
         self.ser.write('M888\r'.encode())
         while True:
@@ -102,8 +102,7 @@ class Dexarm:
 
     def move_to(self, x=None, y=None, z=None, feedrate=2000, mode="G1", wait=True):
         """
-        Move to a cartesian position.
-        Add a linear move to the queue to be performed after all previous moves are completed.
+        Move to a cartesian position. This will add a linear move to the queue to be performed after all previous moves are completed.
 
         Args:
             mode (string, G0 or G1): G1 by default. use G0 for fast mode
@@ -161,12 +160,18 @@ class Dexarm:
     def dealy_ms(self, value):
         """
         Pauses the command queue and waits for a period of time in ms
+
+        Args:
+            value (int): time in ms
         """
         self._send_cmd("G4 P" + str(value) + '\r')
 
     def dealy_s(self, value):
         """
         Pauses the command queue and waits for a period of time in s
+
+        Args:
+            value (int): time in s
         """
         self._send_cmd("G4 S" + str(value) + '\r')
 
