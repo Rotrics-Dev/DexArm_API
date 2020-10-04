@@ -27,9 +27,9 @@ class Dexarm:
                 If True, this function will block until the arm response "ok"
                 If False, this function will not block here. But the command could be ignored if buffer of the arm is full.
         """
-        self.ser.reset_input_buffer()
         self.ser.write(data.encode())
         if not wait:
+            self.ser.reset_input_buffer()
             return
         while True:
             serial_str = self.ser.readline().decode("utf-8")
@@ -84,6 +84,7 @@ class Dexarm:
         Returns:
             string that indicates the type of the module
         """
+        self.ser.reset_input_buffer()
         self.ser.write('M888\r'.encode())
         while True:
             serial_str = self.ser.readline().decode("utf-8")
@@ -110,11 +111,11 @@ class Dexarm:
             feedrate (int): set the feedrate for all subsequent moves
         """
         cmd = mode + "F" + str(feedrate)
-        if x:
+        if x is not None:
             cmd = cmd + "X"+str(round(x))
-        if y:
+        if y is not None:
             cmd = cmd + "Y" + str(round(y))
-        if z:
+        if z is not None:
             cmd = cmd + "Z" + str(round(z))
         cmd = cmd + "\r\n"
         self._send_cmd(cmd, wait=wait)
@@ -136,6 +137,7 @@ class Dexarm:
         Returns:
             position x,y,z, extrusion e, and dexarm theta a,b,c
         """
+        self.ser.reset_input_buffer()
         self.ser.write('M114\r'.encode())
         x, y, z, e, a, b, c = None, None, None, None, None, None, None
         while True:
