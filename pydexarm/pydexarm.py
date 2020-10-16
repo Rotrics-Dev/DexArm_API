@@ -128,7 +128,7 @@ class Dexarm:
             x, y, z (int): the position, in millimeters by default. Units may be set to inches by G20. Note that the center of y axis is 300mm.
             feedrate (int): sets the feedrate for all subsequent moves
         """
-        move_to(self, x=x, y=y, z=z, feedrate=feedrate, mode="G0", wait=wait)
+        self.move_to(x=x, y=y, z=z, feedrate=feedrate, mode="G0", wait=wait)
 
     def get_current_position(self):
         """
