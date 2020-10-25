@@ -3,7 +3,7 @@ from pydexarm import Dexarm
 '''windows'''
 dexarm = Dexarm(port="COM67")
 '''mac & linux'''
-# device = Dexarm(port="/dev/tty.usbmodem3086337A34381")
+# dexarm = Dexarm(port="/dev/tty.usbmodem3086337A34381")
 
 dexarm.go_home()
 
