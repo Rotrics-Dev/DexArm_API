@@ -101,7 +101,7 @@ class Dexarm:
                 if serial_str.find("ok") > -1:
                     return module_type
 
-    def move_to(self, x=None, y=None, z=None, feedrate=2000, mode="G1", wait=True):
+    def move_to(self, x=None, y=None, z=None, e=None, feedrate=2000, mode="G1", wait=True):
         """
         Move to a cartesian position. This will add a linear move to the queue to be performed after all previous moves are completed.
 
@@ -117,6 +117,8 @@ class Dexarm:
             cmd = cmd + "Y" + str(round(y))
         if z is not None:
             cmd = cmd + "Z" + str(round(z))
+        if e is not None:
+            cmd = cmd + "E" + str(round(e))
         cmd = cmd + "\r\n"
         self._send_cmd(cmd, wait=wait)
 
@@ -258,6 +260,13 @@ class Dexarm:
         Stop the belt
         """
         self._send_cmd("M2013\r")
+
+    """Sliding Rail"""
+    def sliding_rail_init(self):
+        """
+        Sliding rail init.
+        """
+        self._send_cmd("M2005\r")
 
     def close(self):
         """

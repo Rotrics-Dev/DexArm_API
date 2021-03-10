@@ -16,4 +16,14 @@ dexarm.move_to(-50, 300, -50)
 dexarm.air_picker_place()
 
 dexarm.go_home()
+
+'''DexArm sliding rail Demo'''
+'''
+dexarm.go_home()
+dexarm.sliding_rail_init()
+dexarm.move_to(None,None,None,0)
+dexarm.move_to(None,None,None,100)
+dexarm.move_to(None,None,None,50)
+dexarm.move_to(None,None,None,200)
+'''
 dexarm.close()
