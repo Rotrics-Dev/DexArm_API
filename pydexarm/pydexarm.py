@@ -247,13 +247,13 @@ class Dexarm:
         """
         Move the belt forward
         """
-        self._send_cmd("M2012 S" + str(speed) + 'D0\r')
+        self._send_cmd("M2012 F" + str(speed) + 'D0\r')
 
     def conveyor_belt_backward(self, speed=0):
         """
         Move the belt backward
         """
-        self._send_cmd("M2012 S" + str(speed) + 'D1\r')
+        self._send_cmd("M2012 F" + str(speed) + 'D1\r')
 
     def conveyor_belt_stop(self, speed=0):
         """
