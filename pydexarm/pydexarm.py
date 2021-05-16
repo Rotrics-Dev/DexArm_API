@@ -61,7 +61,7 @@ class Dexarm:
             travel_acceleration (int): used for moves that include no extrusion.
             retract_acceleration (int): used for extruder retraction moves.
         """
-        cmd = "M204"+"P" + str(acceleration) + "T"+str(travel_acceleration) + "T" + str(retract_acceleration) + "\r\n"
+        cmd = "M204"+"P" + str(acceleration) + "T"+str(travel_acceleration) + "R" + str(retract_acceleration) + "\r\n"
         self._send_cmd(cmd)
 
     def set_module_type(self, module_type):
@@ -130,7 +130,7 @@ class Dexarm:
             x, y, z (int): the position, in millimeters by default. Units may be set to inches by G20. Note that the center of y axis is 300mm.
             feedrate (int): sets the feedrate for all subsequent moves
         """
-        move_to(self, x=x, y=y, z=z, feedrate=feedrate, mode="G0", wait=wait)
+        self.move_to(self, x=x, y=y, z=z, feedrate=feedrate, mode="G0", wait=wait)
 
     def get_current_position(self):
         """
